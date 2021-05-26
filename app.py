@@ -112,6 +112,7 @@ def login():
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
+
     session.pop('curr_user')
     flash("Goodbye!")
     return redirect('/login')
@@ -208,12 +209,20 @@ def stop_following(follow_id):
     return redirect(f"/users/{g.user.id}/following")
 
 
-@app.route('/users/profile', methods=["GET", "POST"])
-def profile():
+@app.route('/users/profile/<int:id>', methods=["GET", "POST"])
+def profile(id):
     """Update profile for current user."""
+    user = User.query.get_or_404(id)
+    form = UserAddForm(obj=user)
 
-    # IMPLEMENT THIS
+    if form.validate_on_submit():
+        bio = form.bio.data
+        location = form.location.data
 
+        db.session.commit()
+        return redirect(f"/users/{user.id}")
+    else:
+        return render_template("users/edit.html", form=form, user=user)
 
 @app.route('/users/delete', methods=["POST"])
 def delete_user():

@@ -33,7 +33,9 @@
           </li>
           <div class="ml-auto">
             {% if g.user.id == user.id %}
-            <a href="/users/profile" class="btn btn-outline-secondary">Edit Profile</a>
+            <form method="post" action="/users/profile/{{ user.id }}" class="from-inline">
+              <button class="btn btn-outline-secondary ml-2">Edit Profile</button>
+            </form>
             <form method="POST" action="/users/delete" class="form-inline">
               <button class="btn btn-outline-danger ml-2">Delete Profile</button>
             </form>
@@ -58,8 +60,9 @@
 <div class="row">
   <div class="col-sm-3">
     <h4 id="sidebar-username">@{{ user.username }}</h4>
-    <p>BIO HERE</p>
-    <p class="user-location"><span class="fa fa-map-marker"></span>LOCATION HERE</p>
+
+    <p>{{ user.bio }}</p>
+    <p class="user-location"><span class="fa fa-map-marker"></span>{{ user.location }}</p>
   </div>
 
   {% block user_details %}
