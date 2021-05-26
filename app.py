@@ -209,16 +209,18 @@ def stop_following(follow_id):
     return redirect(f"/users/{g.user.id}/following")
 
 
-@app.route('/users/profile/<int:id>', methods=["GET", "POST"])
-def profile(id):
+@app.route('/users/profile/<int:user_id>', methods=["GET", "POST"])
+def profile(user_id):
     """Update profile for current user."""
-    user = User.query.get_or_404(id)
-    form = UserAddForm(obj=user)
+    user = User.query.get_or_404(user_id)
 
+    form = UserAddForm(obj=user)
     if form.validate_on_submit():
+        user.username = form.username.data
+        user.email = form.email.data
+        user.image_url = form.image_url.data
         bio = form.bio.data
         location = form.location.data
-
         db.session.commit()
         return redirect(f"/users/{user.id}")
     else:
